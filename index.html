@@ -68,6 +68,7 @@
 </head>
 <body>
     <div class="container">
+        <!-- Sensor Data Section -->
         <div class="data-section">
             <h2>Sensor Data</h2>
             <p>Indoor Temperature: <span id="indoorTemp">--</span> °C</p>
@@ -75,6 +76,8 @@
             <p>Indoor Humidity: <span id="indoorHumidity">--</span> %</p>
             <p>Soil Moisture: <span id="soilMoisture">--</span> %</p>
         </div>
+
+        <!-- Control Section -->
         <div class="control-section">
             <h2>Control Panel</h2>
             <label for="setTemp">Set Temperature:</label>
@@ -93,12 +96,12 @@
         </div>
     </div>
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
-    
-        // Your web app's Firebase configuration
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+
+    <script>
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCeDFjl92CPcBKWMgxXA47ytTok910NFLY",
             authDomain: "iot-2-bff64.firebaseapp.com",
@@ -109,40 +112,43 @@
             appId: "1:503912621897:web:d6fb9409ca12570222dc98",
             measurementId: "G-FFR7G2WSD8"
         };
-    
+
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-    
-        // Reference to your database
-        const dataRef = ref(database, 'sensorData');
-        const controlRef = ref(database, 'controlData');
-    
-        // Function to update the sensor data on the webpage
-        onValue(dataRef, (snapshot) => {
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Reference to the sensor data in Firebase
+        const sensorRef = database.ref('sensors');
+
+        // Reference to the control data in Firebase
+        const controlRef = database.ref('control');
+
+        // Function to update sensor data on the webpage
+        sensorRef.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                document.getElementById('indoorTemp').innerText = data.indoorTemp || '--';
-                document.getElementById('outdoorTemp').innerText = data.outdoorTemp || '--';
-                document.getElementById('indoorHumidity').innerText = data.indoorHumidity || '--';
-                document.getElementById('soilMoisture').innerText = data.soilMoisture || '--';
+                document.getElementById('indoorTemp').innerText = data.indoor_temperature || '--';
+                document.getElementById('outdoorTemp').innerText = data.outdoor_temperature || '--';
+                document.getElementById('indoorHumidity').innerText = data.humidity || '--';
+                document.getElementById('soilMoisture').innerText = data.soil_moisture || '--';
             }
         });
-    
+
         // Function to send control data to Firebase
         function sendData() {
             const setTemp = document.getElementById('setTemp').value;
             const setHumidity = document.getElementById('setHumidity').value;
             const motorSwitch = document.getElementById('motorSwitch').checked;
-    
-            set(controlRef, {
+
+            // Update control data in Firebase
+            controlRef.set({
                 setTemp: setTemp,
                 setHumidity: setHumidity,
                 motorSwitch: motorSwitch
             }).then(() => {
-                alert('Data sent successfully!');
+                alert('Control data sent successfully!');
             }).catch((error) => {
-                console.error('Error sending data: ', error);
+                console.error('Error sending control data: ', error);
             });
         }
     </script>
