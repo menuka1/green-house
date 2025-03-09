@@ -1,29 +1,46 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IoT Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #2a2a72, #009ffd);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 80%;
+            max-width: 900px;
         }
-        .data-section, .control-section {
-            background: white;
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 48%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
         }
         h2 {
             margin-top: 0;
+            font-weight: 600;
+            color: #fff;
+        }
+        .sensor-data p {
+            font-size: 18px;
+            margin: 10px 0;
         }
         .switch {
             position: relative;
@@ -43,7 +60,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
+            background-color: #bbb;
             transition: 0.4s;
             border-radius: 34px;
         }
@@ -59,26 +76,37 @@
             border-radius: 50%;
         }
         input:checked + .slider {
-            background-color: #2196F3;
+            background-color: #21c1f3;
         }
         input:checked + .slider:before {
             transform: translateX(26px);
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #21c1f3;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #1b9dbf;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Sensor Data Section -->
-        <div class="data-section">
+        <div class="card sensor-data">
             <h2>Sensor Data</h2>
             <p>Indoor Temperature: <span id="indoorTemp">--</span> °C</p>
             <p>Outdoor Temperature: <span id="outdoorTemp">--</span> °C</p>
             <p>Indoor Humidity: <span id="indoorHumidity">--</span> %</p>
             <p>Soil Moisture: <span id="soilMoisture">--</span> %</p>
         </div>
-
-        <!-- Control Section -->
-        <div class="control-section">
+        <div class="card control-panel">
             <h2>Control Panel</h2>
             <label for="setTemp">Set Temperature:</label>
             <input type="number" id="setTemp" placeholder="Set Temperature">
